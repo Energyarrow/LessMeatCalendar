@@ -1,59 +1,33 @@
 import 'package:flutter/material.dart';
 import '../models/meal_type.dart';
 
-class MeatChoiceDialog extends StatelessWidget {
-  const MeatChoiceDialog({super.key});
+Future<MealType?> showMealChoiceDialog(BuildContext context) {
+  return showDialog<MealType>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Che cosa hai mangiato?"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _mealButton(context, MealType.none, "🌱 Nessuna carne"),
+            _mealButton(context, MealType.redMeat, "🥩 Carne rossa"),
+            _mealButton(context, MealType.whiteMeat, "🍗 Carne bianca"),
+            _mealButton(context, MealType.salumi, "🥓 Salumi"),
+            _mealButton(context, MealType.fish, "🐟 Pesce"),
+          ],
+        ),
+      );
+    },
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Registra la giornata"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-
-          ListTile(
-            leading: const Text("🌱"),
-            title: const Text("Nessuna carne"),
-            onTap: (){
-              Navigator.pop(context, MealType.none);
-            },
-          ),
-
-          ListTile(
-            leading: const Text("🥩"),
-            title: const Text("Carne rossa"),
-            onTap: (){
-              Navigator.pop(context, MealType.redMeat);
-            },
-          ),
-
-          ListTile(
-            leading: const Text("🍗"),
-            title: const Text("Carne bianca"),
-            onTap: (){
-              Navigator.pop(context, MealType.whiteMeat);
-            },
-          ),
-
-          ListTile(
-            leading: const Text("🥓"),
-            title: const Text("Salumi"),
-            onTap: (){
-              Navigator.pop(context, MealType.curedMeat);
-            },
-          ),
-
-          ListTile(
-            leading: const Text("🐟"),
-            title: const Text("Pesce"),
-            onTap: (){
-              Navigator.pop(context, MealType.fish);
-            },
-          ),
-
-        ],
-      ),
-    );
-  }
+Widget _mealButton(BuildContext context, MealType type, String text) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: () => Navigator.pop(context, type),
+      child: Text(text),
+    ),
+  );
 }
