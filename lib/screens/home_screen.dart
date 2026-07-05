@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("🌱 LessMeatCalendar"),
+        title: const Text("🌱 Less Meat Calendar"),
         centerTitle: true,
       ),
       body: Column(
