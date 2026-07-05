@@ -75,6 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
             lastDay: DateTime.utc(2035, 12, 31),
             focusedDay: _focusedDay,
 
+            headerStyle: const HeaderStyle(
+              formatButtonVisible: false,
+            ),
+
             selectedDayPredicate: (day) =>
                 isSameDay(_selectedDay, day),
 
