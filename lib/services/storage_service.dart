@@ -1,55 +1,45 @@
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'dart:convert';
 
-class MeatCalendar extends StatelessWidget {
-  const MeatCalendar({
-    super.key,
-    required this.focusedDay,
-    required this.selectedDay,
-    required this.onDaySelected,
-    required this.calendarBuilders,
-  });
+import 'package:shared_preferences/shared_preferences.dart';
 
-  final DateTime focusedDay;
-  final DateTime? selectedDay;
+import '../models/meal_type.dart';
 
-  final void Function(DateTime selectedDay, DateTime focusedDay)
-  onDaySelected;
+class StorageService {
+  static const String _key = 'meal_entries';
 
-  final CalendarBuilders<dynamic> calendarBuilders;
+  static Future<void> saveEntries(
+      Map<DateTime, MealType> entries) async {
+    final prefs = await SharedPreferences.getInstance();
 
-  @override
-  Widget build(BuildContext context) {
-    return TableCalendar(
-      firstDay: DateTime.utc(2020, 1, 1),
-      lastDay: DateTime.utc(2035, 12, 31),
-      focusedDay: focusedDay,
-
-      availableCalendarFormats: const {
-        CalendarFormat.month: 'Mese',
-      },
-
-      headerStyle: const HeaderStyle(
-        titleCentered: true,
-        formatButtonVisible: false,
+    final data = entries.map(
+          (date, meal) => MapEntry(
+        date.toIso8601String(),
+        meal.name,
       ),
-
-      calendarStyle: const CalendarStyle(
-        todayDecoration: BoxDecoration(
-          color: Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        selectedDecoration: BoxDecoration(
-          color: Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-      ),
-
-      selectedDayPredicate: (day) => isSameDay(day, selectedDay),
-
-      onDaySelected: onDaySelected,
-
-      calendarBuilders: calendarBuilders,
     );
+
+    await prefs.setString(_key, jsonEncode(data));
+  }
+
+  static Future<Map<DateTime, MealType>> loadEntries() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final json = prefs.getString(_key);
+
+    if (json == null) {
+      return {};
+    }
+
+    final Map<String, dynamic> data = jsonDecode(json);
+
+    final result = <DateTime, MealType>{};
+
+    data.forEach((date, meal) {
+      result[DateTime.parse(date)] = MealType.values.firstWhere(
+            (e) => e.name == meal,
+      );
+    });
+
+    return result;
   }
 }

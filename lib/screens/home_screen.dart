@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../models/meal_type.dart';
+import '../services/storage_service.dart';
 import '../widgets/meat_choice_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +17,49 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? _selectedDay = DateTime.now();
 
   final Map<DateTime, MealType> _entries = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEntries();
+  }
+
+  Future<void> _loadEntries() async {
+    final loadedEntries = await StorageService.loadEntries();
+
+    setState(() {
+      _entries.clear();
+      _entries.addAll(loadedEntries);
+    });
+  }
+
+  Widget _buildDay(DateTime day) {
+    final key = DateTime(day.year, day.month, day.day);
+
+    Color? color;
+
+    if (_entries.containsKey(key)) {
+      color = _entries[key] == MealType.none
+          ? Colors.green
+          : Colors.red;
+    }
+
+    return Container(
+      margin: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        day.day.toString(),
+        style: TextStyle(
+          color: color == null ? Colors.black : Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,35 +94,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     selectedDay.day,
                   )] = result;
                 });
+
+                await StorageService.saveEntries(_entries);
               }
             },
 
             calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, day, focusedDay) {
-                final key = DateTime(day.year, day.month, day.day);
+              defaultBuilder: (context, day, focusedDay) =>
+                  _buildDay(day),
 
-                if (!_entries.containsKey(key)) {
-                  return null;
-                }
+              todayBuilder: (context, day, focusedDay) =>
+                  _buildDay(day),
 
-                final green = _entries[key] == MealType.none;
-
-                return Container(
-                  margin: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: green ? Colors.green : Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    day.day.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              },
+              selectedBuilder: (context, day, focusedDay) =>
+                  _buildDay(day),
             ),
           ),
 
