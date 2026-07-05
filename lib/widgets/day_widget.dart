@@ -4,7 +4,7 @@ import '../models/meal_type.dart';
 
 Widget buildDay(
     DateTime day,
-    Map<DateTime, MealType> entries,
+    Map<DateTime, List<MealType>> entries,
     DateTime? selectedDay,
     ) {
   final key = DateTime(day.year, day.month, day.day);
@@ -12,9 +12,13 @@ Widget buildDay(
   Color? color;
 
   if (entries.containsKey(key)) {
-    color = entries[key] == MealType.none
-        ? Colors.green
-        : Colors.red;
+    final meals = entries[key]!;
+
+    if (meals.length == 1 && meals.contains(MealType.none)) {
+      color = Colors.green;
+    } else {
+      color = Colors.red;
+    }
   }
 
   final isSelected = selectedDay != null &&

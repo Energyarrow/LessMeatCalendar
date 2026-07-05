@@ -8,16 +8,16 @@ enum MealDialogAction {
 
 class MealDialogResult {
   final MealDialogAction action;
-  final MealType? mealType;
+  final List<MealType>? mealTypes;
 
-  const MealDialogResult.select(this.mealType)
+  const MealDialogResult.select(this.mealTypes)
       : action = MealDialogAction.select;
 
   const MealDialogResult.delete()
       : action = MealDialogAction.delete,
-        mealType = null;
+        mealTypes = null;
 
   const MealDialogResult.cancel()
       : action = MealDialogAction.cancel,
-        mealType = null;
+        mealTypes = null;
 }

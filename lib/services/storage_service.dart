@@ -8,20 +8,20 @@ class StorageService {
   static const String _key = 'meal_entries';
 
   static Future<void> saveEntries(
-      Map<DateTime, MealType> entries) async {
+      Map<DateTime, List<MealType>> entries) async {
     final prefs = await SharedPreferences.getInstance();
 
     final data = entries.map(
-          (date, meal) => MapEntry(
+          (date, meals) => MapEntry(
         date.toIso8601String(),
-        meal.name,
+        meals.map((meal) => meal.name).toList(),
       ),
     );
 
     await prefs.setString(_key, jsonEncode(data));
   }
 
-  static Future<Map<DateTime, MealType>> loadEntries() async {
+  static Future<Map<DateTime, List<MealType>>> loadEntries() async {
     final prefs = await SharedPreferences.getInstance();
 
     final json = prefs.getString(_key);
@@ -32,12 +32,26 @@ class StorageService {
 
     final Map<String, dynamic> data = jsonDecode(json);
 
-    final result = <DateTime, MealType>{};
+    final result = <DateTime, List<MealType>>{};
 
-    data.forEach((date, meal) {
-      result[DateTime.parse(date)] = MealType.values.firstWhere(
-            (e) => e.name == meal,
-      );
+    data.forEach((date, meals) {
+      // Compatibilità con il vecchio formato
+      if (meals is String) {
+        result[DateTime.parse(date)] = [
+          MealType.values.firstWhere(
+                (e) => e.name == meals,
+          )
+        ];
+      } else {
+        result[DateTime.parse(date)] =
+            (meals as List)
+                .map(
+                  (meal) => MealType.values.firstWhere(
+                    (e) => e.name == meal,
+              ),
+            )
+                .toList();
+      }
     });
 
     return result;

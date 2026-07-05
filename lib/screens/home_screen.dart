@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay = DateTime.now();
 
-  final Map<DateTime, MealType> _entries = {};
+  final Map<DateTime, List<MealType>> _entries = {};
 
   @override
   void initState() {
@@ -29,8 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final loadedEntries = await StorageService.loadEntries();
 
     setState(() {
-      _entries.clear();
-      _entries.addAll(loadedEntries);
+      _entries
+        ..clear()
+        ..addAll(loadedEntries);
     });
   }
 

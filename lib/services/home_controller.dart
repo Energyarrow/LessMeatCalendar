@@ -10,7 +10,7 @@ class HomeController {
     required BuildContext context,
     required DateTime selectedDay,
     required DateTime focusedDay,
-    required Map<DateTime, MealType> entries,
+    required Map<DateTime, List<MealType>> entries,
     required VoidCallback refresh,
     required Function(DateTime) updateFocusedDay,
     required Function(DateTime?) updateSelectedDay,
@@ -18,22 +18,32 @@ class HomeController {
     updateSelectedDay(selectedDay);
     updateFocusedDay(focusedDay);
 
-    final result = await showMealChoiceDialog(context);
-
-    if (result == null) {
-      refresh();
-      return;
-    }
-
     final key = DateTime(
       selectedDay.year,
       selectedDay.month,
       selectedDay.day,
     );
 
+    final initialMeals = entries[key] ?? [];
+
+    final result = await showMealChoiceDialog(
+      context,
+      initialMeals,
+    );
+
+    if (result == null) {
+      refresh();
+      return;
+    }
+
     switch (result.action) {
       case MealDialogAction.select:
-        entries[key] = result.mealType!;
+        if (result.mealTypes != null &&
+            result.mealTypes!.isNotEmpty) {
+          entries[key] = result.mealTypes!;
+        } else {
+          entries.remove(key);
+        }
         break;
 
       case MealDialogAction.delete:

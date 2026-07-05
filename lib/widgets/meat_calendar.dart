@@ -15,7 +15,7 @@ class MeatCalendar extends StatelessWidget {
 
   final DateTime focusedDay;
   final DateTime? selectedDay;
-  final Map<DateTime, MealType> entries;
+  final Map<DateTime, List<MealType>> entries;
 
   final Future<void> Function(DateTime, DateTime) onDaySelected;
 

@@ -11,10 +11,10 @@ class SelectedDayCard extends StatelessWidget {
   });
 
   final DateTime? selectedDay;
-  final Map<DateTime, MealType> entries;
+  final Map<DateTime, List<MealType>> entries;
   final VoidCallback onPressed;
 
-  String _mealText(MealType? meal) {
+  String _mealText(MealType meal) {
     switch (meal) {
       case MealType.none:
         return "🌱 Nessuna carne";
@@ -26,8 +26,6 @@ class SelectedDayCard extends StatelessWidget {
         return "🥓 Salumi";
       case MealType.fish:
         return "🐟 Pesce";
-      case null:
-        return "Nessuna registrazione";
     }
   }
 
@@ -43,40 +41,60 @@ class SelectedDayCard extends StatelessWidget {
       selectedDay!.day,
     );
 
-    final meal = entries[key];
+    final meals = entries[key];
 
     return Card(
       margin: const EdgeInsets.all(16),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "${selectedDay!.day}/${selectedDay!.month}/${selectedDay!.year}",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Center(
+              child: Text(
+                "${selectedDay!.day}/${selectedDay!.month}/${selectedDay!.year}",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            Text(
-              _mealText(meal),
-              style: const TextStyle(fontSize: 18),
-            ),
+            if (meals == null || meals.isEmpty)
+              const Center(
+                child: Text(
+                  "Nessuna registrazione",
+                  style: TextStyle(fontSize: 18),
+                ),
+              )
+            else
+              ...meals.map(
+                    (meal) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Text(
+                    _mealText(meal),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
 
             const SizedBox(height: 20),
 
-            ElevatedButton.icon(
-              onPressed: onPressed,
-              icon: Icon(
-                meal == null ? Icons.add : Icons.edit,
-              ),
-              label: Text(
-                meal == null
-                    ? "Registra"
-                    : "Modifica",
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: onPressed,
+                icon: Icon(
+                  meals == null || meals.isEmpty
+                      ? Icons.add
+                      : Icons.edit,
+                ),
+                label: Text(
+                  meals == null || meals.isEmpty
+                      ? "Registra"
+                      : "Modifica",
+                ),
               ),
             ),
           ],
