@@ -17,15 +17,15 @@ class SelectedDayCard extends StatelessWidget {
   String _mealText(MealType meal) {
     switch (meal) {
       case MealType.none:
-        return "🌱 Nessuna carne";
+        return "🌱 Meat-free";
       case MealType.redMeat:
-        return "🥩 Carne rossa";
+        return "🥩 Red meat";
       case MealType.whiteMeat:
-        return "🍗 Carne bianca";
+        return "🍗 White meat";
       case MealType.salumi:
-        return "🥓 Salumi";
+        return "🥓 Processed meat";
       case MealType.fish:
-        return "🐟 Pesce";
+        return "🐟 Fish";
     }
   }
 
@@ -65,7 +65,7 @@ class SelectedDayCard extends StatelessWidget {
             if (meals == null || meals.isEmpty)
               const Center(
                 child: Text(
-                  "Nessuna registrazione",
+                  "No entry",
                   style: TextStyle(fontSize: 18),
                 ),
               )
@@ -92,8 +92,8 @@ class SelectedDayCard extends StatelessWidget {
                 ),
                 label: Text(
                   meals == null || meals.isEmpty
-                      ? "Registra"
-                      : "Modifica",
+                      ? "Add Entry"
+                      : "Edit Entry",
                 ),
               ),
             ),

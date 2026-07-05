@@ -37,34 +37,34 @@ Future<MealDialogResult?> showMealChoiceDialog(
           }
 
           return AlertDialog(
-            title: const Text("Che cosa hai mangiato?"),
+            title: const Text("What did you eat?"),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CheckboxListTile(
                     value: selectedMeals.contains(MealType.none),
-                    title: const Text("🌱 Nessuna carne"),
+                    title: const Text("🌱 Meat-free"),
                     onChanged: (_) => toggle(MealType.none),
                   ),
                   CheckboxListTile(
                     value: selectedMeals.contains(MealType.redMeat),
-                    title: const Text("🥩 Carne rossa"),
+                    title: const Text("🥩 Red meat"),
                     onChanged: (_) => toggle(MealType.redMeat),
                   ),
                   CheckboxListTile(
                     value: selectedMeals.contains(MealType.whiteMeat),
-                    title: const Text("🍗 Carne bianca"),
+                    title: const Text("🍗 White meat"),
                     onChanged: (_) => toggle(MealType.whiteMeat),
                   ),
                   CheckboxListTile(
                     value: selectedMeals.contains(MealType.salumi),
-                    title: const Text("🥓 Salumi"),
+                    title: const Text("🥓 Processed meat"),
                     onChanged: (_) => toggle(MealType.salumi),
                   ),
                   CheckboxListTile(
                     value: selectedMeals.contains(MealType.fish),
-                    title: const Text("🐟 Pesce"),
+                    title: const Text("🐟 Fish"),
                     onChanged: (_) => toggle(MealType.fish),
                   ),
 
@@ -75,7 +75,7 @@ Future<MealDialogResult?> showMealChoiceDialog(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.check),
-                      label: const Text("Conferma"),
+                      label: const Text("Save"),
                       onPressed: () {
                         Navigator.pop(
                           context,
@@ -91,7 +91,7 @@ Future<MealDialogResult?> showMealChoiceDialog(
                     width: double.infinity,
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.delete_outline),
-                      label: const Text("Elimina registrazione"),
+                      label: const Text("Delete Entry"),
                       onPressed: () {
                         Navigator.pop(
                           context,
@@ -110,7 +110,7 @@ Future<MealDialogResult?> showMealChoiceDialog(
                           const MealDialogResult.cancel(),
                         );
                       },
-                      child: const Text("Annulla"),
+                      child: const Text("Cancel"),
                     ),
                   ),
                 ],
