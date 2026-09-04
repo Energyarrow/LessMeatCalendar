@@ -26,6 +26,8 @@ class MeatCalendar extends StatelessWidget {
       lastDay: DateTime.utc(2035, 12, 31),
       focusedDay: focusedDay,
 
+      startingDayOfWeek: StartingDayOfWeek.monday,
+
       headerStyle: const HeaderStyle(
         formatButtonVisible: false,
       ),
